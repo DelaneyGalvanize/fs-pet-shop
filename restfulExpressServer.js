@@ -2,19 +2,18 @@
 
 const fs = require('fs');
 const path = require('path');
-const petsPath = path.join(__dirname, 'pets.json');
 const express = require('express');
-const app = express();
 const bodyParser = require('body-parser')
 const morgan = require('morgan');
-const port = process.env.PORT || 8000;
+let app = express();
+let petsPath = path.join(__dirname, 'pets.json');
+let port = process.env.PORT || 8000;
 
 app.use(bodyParser.json()); // to support JSON-encoded bodies
 app.get('/pets', function(req, res) {
   fs.readFile(petsPath, 'utf8', function(err, petsJSON) {
     if (err) {
-      // console.error(err.stack);
-      return res.sendStatus(500);
+      res.sendStatus(500);
     }
     res.set('Content-Type', 'application/json')
     res.send(petsJSON);
@@ -22,22 +21,21 @@ app.get('/pets', function(req, res) {
 });
 
 app.get('/pets/:id', function(req, res) {
-  fs.readFile(petsPath, 'utf8', function(err, petsJSON) {
+  fs.readFile(petsPath, 'utf8', function(err, petsData) {
     if (err) {
-      // console.error(err.stack);
-      return res.sendStatus(500);
+      res.sendStatus(500);
     }
     let id = Number.parseInt(req.params.id);
-    let pets = JSON.parse(petsJSON);
-    if (id < 0 || id >= pets.length || Number.isNaN(id)) {
+    let parsedPets = JSON.parse(petsData);
+    if (id < 0 || id >= parsedPets.length || Number.isNaN(id)) {
       return res.sendStatus(404);
     }
     res.set('Content-Type', 'application/json');
-    res.send(JSON.stringify(pets[id]));
+    res.send(JSON.stringify(parsedPets[id]));
   });
 });
 
-app.post('/pets', (req, res) => {
+app.post('/pets', function(req, res) {
   let name = req.body.name
   let age = req.body.age
   let kind = req.body.kind
@@ -49,22 +47,21 @@ app.post('/pets', (req, res) => {
       'age': age,
       'kind': kind
     }
-    fs.readFile(petsPath, 'utf8', (err, petsJSON) => {
+    fs.readFile(petsPath, 'utf8', function(err, petsData) {
       if (err) {
-        // console.error(err.stack);
-        return res.sendStatus(500);
+        res.sendStatus(500);
       }
-      let pets = JSON.parse(petsJSON)
-      pets.push(req.body)
-      petsJSON = JSON.stringify(pets)
-      fs.writeFile(petsPath, petsJSON, (err) => {
+      let parsedPets = JSON.parse(petsData)
+      parsedPets.push(req.body)
+      petsData = JSON.stringify(parsedPets)
+      fs.writeFile(petsPath, petsData, function(err) {
         if (err) throw error;
         res.send((req.body))
       })
     })
   }
 })
-app.patch('/pets/:id', (req, res) => {
+app.patch('/pets/:id', function(req, res) {
   let name = req.body.name
   let age = req.body.age
   let kind = req.body.kind
@@ -72,45 +69,45 @@ app.patch('/pets/:id', (req, res) => {
   if (!name && (!age || typeof age !== 'number') && !kind) {
     res.sendStatus(400)
   } else {
-    fs.readFile(petsPath, 'utf8', (err, petsJSON) => {
+    fs.readFile(petsPath, 'utf8', function(err, petsData) {
       if (err) {
         console.error(err.stack);
         return res.sendStatus(500);
       }
-      let pets = JSON.parse(petsJSON)
-      if (name) pets[req.params.id].name = name;
-      if (age && typeof age === 'number') pets[req.params.id].age = age;
-      if (kind) pets[req.params.id].kind = kind;
+      let parsedPets = JSON.parse(petsData)
+      if (name) parsedPets[req.params.id].name = name;
+      if (age && typeof age === 'number') parsedPets[req.params.id].age = age;
+      if (kind) parsedPets[req.params.id].kind = kind;
 
-      petsJSON = JSON.stringify(pets)
-      fs.writeFile(petsPath, petsJSON, (err) => {
+      petsData = JSON.stringify(parsedPets)
+      fs.writeFile(petsPath, petsData, function(err){
         if (err) throw error;
-        res.send(pets[req.params.id])
+        res.send(parsedPets[req.params.id])
       })
     })
   }
 })
 
-app.delete('/pets/:id', (req, res) => {
-  fs.readFile(petsPath, 'utf8', (err, petsJSON) => {
+app.delete('/pets/:id', function(req, res) {
+  fs.readFile(petsPath, 'utf8', function(err, petsData) {
     if (err) {
       console.error(err.stack);
       return res.sendStatus(500);
     }
-    let pets = JSON.parse(petsJSON)
-    let byebye = pets.splice(req.params.id, 1)
-    petsJSON = JSON.stringify(pets)
-    fs.writeFile(petsPath, petsJSON, (err) => {
+    let parsedPets = JSON.parse(petsData)
+    let gone = parsedPets.splice(req.params.id, 1)
+    petsData = JSON.stringify(parsedPets)
+    fs.writeFile(petsPath, petsData, function(err) {
       if (err) throw error;
-      res.send(byebye[0])
+      res.send(gone[0])
     })
   })
 })
-app.use((req, res) => {
+app.use(function(req, res) {
   res.sendStatus(404);
 });
 
-app.listen(port, () => {
+app.listen(port, function(){
   console.log('Listening on port', port);
 });
 

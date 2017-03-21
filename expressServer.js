@@ -1,3 +1,5 @@
+'use strict'
+
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
@@ -6,14 +8,14 @@ const petsPath = path.join(__dirname, 'pets.JSON');
 
 let app = express()
 
-fs.readFile(petsPath, 'utf8', (err, petsData) => {
+fs.readFile(petsPath, 'utf8', function(err, petsData)  {
   let parsedPets = JSON.parse(petsData)
-  app.get('/pets', (req, res) => {
+  app.get('/pets', function(req, res) {
 
   // console.log("IN IT /pets");
   res.send(parsedPets);
   })
-  app.get('/pets/:id', (req, res) => {
+  app.get('/pets/:id', function(req, res){
     let id = req.params.id
     // console.log(id);
     // console.log(req.params.id);
@@ -27,6 +29,6 @@ fs.readFile(petsPath, 'utf8', (err, petsData) => {
     }
   })
 })
-// app.listen(8000)
+app.listen(8000)
 
 module.exports = app
