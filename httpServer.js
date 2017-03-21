@@ -26,9 +26,9 @@ let server = http.createServer(function(req, res) {
                 res.setHeader('Content-Type', 'text/plain');
                 return res.end('Internal Server Error');
             }
-
-            let parsedPets = JSON.parse(petsData);
-            let petsData = JSON.stringify(parsedPets[0]);
+            //dont use let!
+            var parsedPets = JSON.parse(petsData);
+            var petsData = JSON.stringify(parsedPets[0]);
 
             res.setHeader('Content-Type', 'application/json');
             res.end(petsData);
@@ -41,9 +41,9 @@ let server = http.createServer(function(req, res) {
                 res.setHeader('Content-Type', 'text/plain');
                 return res.end('Internal Server Error');
             }
-
-            let parsedPets = JSON.parse(petsData);
-            let petsData = JSON.stringify(parsedPets[1]);
+            //dont use let!
+            var parsedPets = JSON.parse(petsData);
+            var petsData = JSON.stringify(parsedPets[1]);
 
             res.setHeader('Content-Type', 'application/json');
             res.end(petsData);

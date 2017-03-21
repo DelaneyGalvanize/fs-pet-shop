@@ -11,14 +11,10 @@ let app = express()
 fs.readFile(petsPath, 'utf8', function(err, petsData) {
     let parsedPets = JSON.parse(petsData)
     app.get('/pets', function(req, res) {
-
-        // console.log("IN IT /pets");
         res.send(parsedPets);
     })
     app.get('/pets/:id', function(req, res) {
         let id = req.params.id
-        // console.log(id);
-        // console.log(req.params.id);
         if (!isNaN(id) && id >= 0 && id < parsedPets.length) {
             res.send(parsedPets[id])
         } else {

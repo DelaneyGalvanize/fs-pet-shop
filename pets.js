@@ -10,7 +10,6 @@ let index = Number(process.argv[3])
 
 if (command === 'read') {
     fs.readFile(petsPath, 'utf-8', function(err, petsData) {
-        // parse 'petsData' so it can be manipulated by js
         let parsedPets = JSON.parse(petsData)
         if (err) {
             throw err
@@ -30,7 +29,6 @@ if (command === 'read') {
 } else if (command === 'create') {
     fs.readFile(petsPath, 'utf-8', function(err, petsData) {
         let parsedPets = JSON.parse(petsData)
-        // create an empty object to add new pet's key-value pairs
         let newPet = {}
         //string
         var age = Number(process.argv[3])
@@ -40,7 +38,6 @@ if (command === 'read') {
             console.error('Usage: node pets.js create AGE KIND NAME')
             process.exit(1)
         }
-        // create the new object's key-value 'pairs' based on values retrieved from command line prompt
         newPet['age'] = age
         newPet['kind'] = kind
         newPet['name'] = name
@@ -48,7 +45,6 @@ if (command === 'read') {
         parsedPets.push(newPet)
         // 'stringify' the array back to json doc
         var updatedJSON = JSON.stringify(parsedPets)
-        // use 'writeFile()' to write to 'petsPath' file
         fs.writeFile(petsPath, updatedJSON, function(err) {
             if (err) {
                 throw err
