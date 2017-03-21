@@ -3,6 +3,7 @@ const fs = require('fs')
 const path = require('path')
 const node = path.basename(process.argv[0]);
 const file = path.basename(process.argv[1])
+
 let petsPath = path.join(__dirname, 'pets.json')
 let command = process.argv[2]
 let index = Number(process.argv[3])
@@ -49,7 +50,7 @@ if (command === 'read') {
       var updatedJSON = JSON.stringify(parsedPets)
       // use 'writeFile()' to write to 'petsPath' file
       fs.writeFile(petsPath, updatedJSON, function(err){
-        if (err) 
+        if (err)
         { throw err }
     })
   })

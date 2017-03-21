@@ -4,8 +4,8 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const port = process.env.PORT || 8000
-const petsPath = path.join(__dirname, 'pets.JSON');
 
+let petsPath = path.join(__dirname, 'pets.JSON');
 let app = express()
 
 fs.readFile(petsPath, 'utf8', function(err, petsData)  {

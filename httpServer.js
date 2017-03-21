@@ -2,12 +2,12 @@
 
 const fs = require('fs');
 const path = require('path');
-var petsPath = path.join(__dirname, 'pets.json');
-
 const http = require('http');
-var port = process.env.PORT || 8000;
 
-var server = http.createServer(function(req, res) {
+let petsPath = path.join(__dirname, 'pets.json');
+let port = process.env.PORT || 8000;
+
+let server = http.createServer(function(req, res) {
   if (req.method === 'GET' && req.url === '/pets') {
     fs.readFile(petsPath, 'utf8', function(err, petsData) {
       if (err) {
@@ -28,8 +28,8 @@ var server = http.createServer(function(req, res) {
         return res.end('Internal Server Error');
       }
 
-      var parsedPets = JSON.parse(petsData);
-      var petsData = JSON.stringify(parsedPets[0]);
+      let parsedPets = JSON.parse(petsData);
+      let petsData = JSON.stringify(parsedPets[0]);
 
       res.setHeader('Content-Type', 'application/json');
       res.end(petsData);
@@ -44,8 +44,8 @@ var server = http.createServer(function(req, res) {
         return res.end('Internal Server Error');
       }
 
-      var parsedPets = JSON.parse(petsData);
-      var petsData = JSON.stringify(parsedPets[1]);
+      let parsedPets = JSON.parse(petsData);
+      let petsData = JSON.stringify(parsedPets[1]);
 
       res.setHeader('Content-Type', 'application/json');
       res.end(petsData);
